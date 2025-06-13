@@ -38,6 +38,7 @@ contract VipDiscountPlugin is IAlgebraPlugin, IAlgebraDynamicFeePlugin, VipDisco
         origFee = _origFee;
         vkHash = _vkHash;
         pool = _pool;
+        pluginConfig = uint8(Plugins.BEFORE_SWAP_FLAG | Plugins.DYNAMIC_FEE);
     }
 
     // satisfy IAlgebraDynamicFeePlugin. orig fee without any discount
@@ -128,6 +129,11 @@ contract VipDiscountPlugin is IAlgebraPlugin, IAlgebraDynamicFeePlugin, VipDisco
 
     // must call after pool owner did pool.setPlugin so plugin can be called on hooks
     function setConfigInPool() external onlyOwner {
+        IAlgebraPool(pool).setPluginConfig(pluginConfig);
+    }
+
+    function updatePluginConfig(uint8 newcfg) external onlyOwner {
+        pluginConfig = newcfg;
         IAlgebraPool(pool).setPluginConfig(pluginConfig);
     }
 
